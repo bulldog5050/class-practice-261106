@@ -8,25 +8,23 @@ st.set_page_config(page_title="나를 소개합니다", page_icon="🌈", layout
 PROFILE = {
     "name": "구세현",
     "headline": "반가워요! 저를 소개합니다.",
-    "intro": "좋아하는 것과 새로운 도전을 차곡차곡 쌓아가는 사람입니다.\n이 문장을 나를 가장 잘 표현하는 소개로 바꿔보세요.",
-    "affiliation": "학교 · 학과 · 동아리 또는 직장을 입력하세요",
-    "affiliation_detail": "현재 어떤 곳에서 무엇을 하고 있는지 적어보세요.",
-    "dream": "나의 꿈을 입력하세요",
-    "dream_detail": "그 꿈을 꾸게 된 이유나 앞으로의 목표를 적어보세요.",
+    "intro": "청주교육대학교 컴퓨터교육학과 26학번입니다! 만나서 반가워요!",
+    "affiliation": "청주교육대학교",
+    "dream": "초등교사",
     "courses": [
-        ("기억에 남는 수업", "무엇을 배우고 어떤 점이 재미있었나요?"),
-        ("새롭게 배운 것", "수업이나 활동에서 익힌 기술을 적어보세요."),
-        ("다음에 도전할 수업", "앞으로 배우고 싶은 주제를 적어보세요."),
+        ("웹 개발 수업", "웹을 만드는 것이 완전히 처음이라 신기하다."),
+        ("새롭게 배운 것", "내가 원하는 스타일로 웹을 만드는 과정 및 코딩"),
+        ("더 많은 웹을 생성하고, 학습지를 만드는 수업", ""),
     ],
-    "hometown": "고향을 입력하세요",
-    "family_home": "본가가 있는 곳을 입력하세요",
+    "hometown": "대전",
+    "family_home": "대전",
     "home_detail": "고향이나 본가에서 좋아하는 풍경, 음식, 추억을 적어보세요.",
-    "ideal_type": "나의 이상형을 입력하세요",
-    "ideal_detail": "외모보다 성격, 가치관, 함께하고 싶은 순간을 적어도 좋아요.",
+    "ideal_type": "다정하고 남자다운 남자(?)",
     "trips": [
-        ("여행지 01", "어디를 여행했는지", "그곳에서 가장 기억에 남는 순간"),
-        ("여행지 02", "또 다른 여행지를 입력하세요", "사진처럼 남아 있는 장면을 적어보세요."),
-        ("다음 여행", "가보고 싶은 곳", "그곳에서 해보고 싶은 일을 적어보세요."),
+        "태국",
+        "중국",
+        "홍콩",
+        "베트남",
     ],
 }
 
@@ -122,14 +120,13 @@ st.markdown(
     .trip-row:last-of-type { border-bottom: 0; border-radius: 0 0 8px 8px; }
     .trip-index { color: #a52b68; font-size: .75rem; font-weight: 800; }
     .trip-place { margin: .15rem 0 0; font-family: 'Jua', 'Gowun Dodum', sans-serif; font-size: 1.2rem; }
-    .trip-memory { margin: 0; line-height: 1.7; }
     .footer-note { margin-top: 2.5rem; padding: 1rem 0; border-top: 2px solid rgba(39,21,42,.18); font-size: .86rem; font-weight: 700; }
     @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 650px) {
         .block-container { padding-top: 1.2rem; }
         .hero { padding: 2rem 1.35rem; }
         .hero h1 { font-size: 2.35rem; }
-        .trip-row { grid-template-columns: 1fr; gap: .35rem; }
+        .trip-row { grid-template-columns: 90px 1fr; gap: .6rem; }
     }
     </style>
     """,
@@ -173,9 +170,9 @@ st.markdown(
 )
 affiliation_column, dream_column = st.columns(2, gap="medium")
 with affiliation_column:
-    render_card("MY PLACE", "나의 소속", PROFILE["affiliation_detail"], "accent-yellow")
+    render_card("MY PLACE", "나의 소속", PROFILE["affiliation"], "accent-yellow")
 with dream_column:
-    render_card("MY DREAM", PROFILE["dream"], PROFILE["dream_detail"], "accent-pink")
+    render_card("MY DREAM", "나의 꿈", PROFILE["dream"], "accent-pink")
 
 st.markdown(
     '<div class="section-title"><div class="section-kicker">WHAT I LEARNED</div><h2>내가 들었던 수업</h2></div>',
@@ -184,12 +181,13 @@ st.markdown(
 course_columns = st.columns(3, gap="medium")
 for column, (course_title, course_detail) in zip(course_columns, PROFILE["courses"]):
     with column:
+        detail_markup = f"<p>{safe(course_detail)}</p>" if course_detail else ""
         st.markdown(
             f"""
             <section class="course-card">
                 <div class="section-kicker">CLASS NOTE</div>
                 <h3>{safe(course_title)}</h3>
-                <p>{safe(course_detail)}</p>
+                {detail_markup}
             </section>
             """,
             unsafe_allow_html=True,
@@ -214,18 +212,18 @@ with home_column:
         unsafe_allow_html=True,
     )
 with ideal_column:
-    render_card("MY IDEAL TYPE", PROFILE["ideal_type"], PROFILE["ideal_detail"], "accent-pink")
+    render_card("MY IDEAL TYPE", "나의 이상형", PROFILE["ideal_type"], "accent-pink")
 
 st.markdown(
     '<div class="section-title"><div class="section-kicker">POSTCARDS</div><h2>내가 여행한 곳</h2></div>',
     unsafe_allow_html=True,
 )
-for index, (trip_title, destination, memory) in enumerate(PROFILE["trips"], start=1):
+for index, trip_title in enumerate(PROFILE["trips"], start=1):
     st.markdown(
         f"""
         <div class="trip-row">
-            <div><div class="trip-index">TRIP {index:02d}</div><div class="trip-place">{safe(trip_title)}</div></div>
-            <p class="trip-memory"><strong>{safe(destination)}</strong><br>{safe(memory)}</p>
+            <div class="trip-index">TRIP {index:02d}</div>
+            <div class="trip-place">{safe(trip_title)}</div>
         </div>
         """,
         unsafe_allow_html=True,
